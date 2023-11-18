@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useMutation } from '@apollo/client'
 import { useRouter } from 'next/router'
 import BoardWriteUI from './BoardWrite.presenter'
 import { CREATE_BOARD, UPDATE_BOARD } from './BoardWrite.queries'
+import { IBoardWriteProps, IUpdataBoardInputValue } from "./BoardWrite.types";
+import { IMutation, IMutationCreateBoardArgs, IMutationUpdateBoardArgs } from "../../../../commons/types/generated/types";
 
-export default function BoardWrite(props) {
+export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
   const router = useRouter()
   const [isActive, setIsActive] = useState(false);
 
@@ -18,10 +20,10 @@ export default function BoardWrite(props) {
   const [titleError, setTitleError] = useState("");
   const [contentsError, setContentsError] = useState("");
 
-  const [createBoard] = useMutation(CREATE_BOARD)
-  const [updateBoard] = useMutation(UPDATE_BOARD);
+  const [createBoard] = useMutation<Pick<IMutation, "createBoard">, IMutationCreateBoardArgs>(CREATE_BOARD)
+  const [updateBoard] = useMutation<Pick<IMutation, "updateBoard">, IMutationUpdateBoardArgs>(UPDATE_BOARD);
 
-  const onChangeWriter = (event) => {
+  const onChangeWriter = (event: ChangeEvent<HTMLInputElement>) => {
     setWriter(event.target.value);
     if (event.target.value !== "") {
       setWriterError("")
@@ -34,7 +36,7 @@ export default function BoardWrite(props) {
     }
   };
 
-  const onChangePassword = (event) => {
+  const onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
     if (event.target.value !== "") {
       setPasswordError("")
@@ -47,7 +49,7 @@ export default function BoardWrite(props) {
     }
   };
 
-  const onChangeTitle = (event) => {
+  const onChangeTitle = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
     if (event.target.value !== "") {
       setTitleError("")
@@ -60,7 +62,7 @@ export default function BoardWrite(props) {
     }
   };
 
-  const onChangeContents = (event) => {
+  const onChangeContents = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setContents(event.target.value);
     if (event.target.value !== "") {
       setContentsError("")
@@ -98,9 +100,9 @@ export default function BoardWrite(props) {
             }
           }
         })
-        console.log(result.data.createBoard._id)
-        router.push(`/boards/${result.data.createBoard._id}`)
-      } catch (error) {
+        console.log(result.data?.createBoard._id)
+        router.push(`/boards/${result.data?.createBoard._id}`)
+      } catch (error: any) {
         alert(error.message)
       }
     }
@@ -110,22 +112,34 @@ export default function BoardWrite(props) {
 
   const onClickUpdate = async () => {
     //writer는 백엔드에서 수정 못하게 설정되어있으므로 readonly, disabled를 사용해서 비활성화 시켜야함
-    const updateBoardInput = {};
-    if (title) updateBoardInput.title = title;
-    if (contents) updateBoardInput.contents = contents;
 
+    if (!title && !contents) {
+      alert("수정된 내용이 없습니다.")
+      return //수정된 내용이 없으므로 아래 함수가 실행되지 않도록 return으로 이벤트 종료
+    }
+
+    if (!password) {
+      alert("비밀번호를 입력해주세요.");
+      return
+    }
+
+    const updateBoardInputValue: IUpdataBoardInputValue = {};
+    if (title) updateBoardInputValue.title = title;
+    if (contents) updateBoardInputValue.contents = contents;
+    if (router.query.boardId !== "string") return;
     try {
       const result = await updateBoard({
         variables: {
           boardId: router.query.boardId,
           password: password,
-          updateBoardInput: updateBoardInput
+          updateBoardInput: updateBoardInputValue
         },
       })
-      router.push(`/boards/${result.data.updateBoard._id}`)
+      router.push(`/boards/${result.data?.updateBoard._id}`)
       console.log(result);
     } catch (error) {
-      alert(error.message)
+      if (error instanceof Error) console.log(error);
+
     }
   };
 

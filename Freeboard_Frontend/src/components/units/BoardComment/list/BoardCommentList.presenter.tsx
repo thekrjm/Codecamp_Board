@@ -1,7 +1,8 @@
 import * as S from "./BoardCommentList.styles";
 import { getDate } from "../../../../commons/libraries/utils";
+import { IBoardCommentListUIProps } from "./BoardCommentList.types";
 
-export default function BoardCommentListUI(props) {
+export default function BoardCommentListUI(props: IBoardCommentListUIProps) {
   return (
     <div>
       {props.data?.fetchBoardComments.map((el) => (
@@ -17,7 +18,7 @@ export default function BoardCommentListUI(props) {
             <S.OptionWrapper>
               <S.UpdateIcon src="/images/boardComment/list/option_update_icon.png" />
               <S.DeleteIcon
-                id={el._d}
+                id={el._id}
                 src="/images/boardComment/list/option_delete_icon.png"
                 onClick={props.onClickDelete}
               />
