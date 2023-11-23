@@ -6,8 +6,12 @@ import {
   FETCH_BOARD_COMMENTS,
 } from "./BoardCommentList.queries";
 import { MouseEvent } from "react";
-import { IMutation, IMutationDeleteBoardCommentArgs, IQuery, IQueryFetchBoardCommentsArgs } from "../../../../commons/types/generated/types";
-
+import {
+  IMutation,
+  IMutationDeleteBoardCommentArgs,
+  IQuery,
+  IQueryFetchBoardCommentsArgs,
+} from "../../../../commons/types/generated/types";
 
 export default function BoardCommentList() {
   const router = useRouter();
@@ -18,15 +22,15 @@ export default function BoardCommentList() {
   }
   const [deleteBoardComment] = useMutation<
     Pick<IMutation, "deleteBoardComment">,
-    IMutationDeleteBoardCommentArgs>(DELETE_BOARD_COMMENT);
+    IMutationDeleteBoardCommentArgs
+  >(DELETE_BOARD_COMMENT);
 
   const { data } = useQuery<
     Pick<IQuery, "fetchBoardComments">,
-    IQueryFetchBoardCommentsArgs>(FETCH_BOARD_COMMENTS,
-      {
-        variables: { boardId: router.query.boardId },
-      });
-
+    IQueryFetchBoardCommentsArgs
+  >(FETCH_BOARD_COMMENTS, {
+    variables: { boardId: router.query.boardId },
+  });
 
   const onClickDelete = async (event: MouseEvent<HTMLImageElement>) => {
     const myPassword = prompt("비밀번호를 입력하세요.");
@@ -34,7 +38,7 @@ export default function BoardCommentList() {
       await deleteBoardComment({
         variables: {
           password: myPassword,
-          boardCommentId: event.currentTarget.id
+          boardCommentId: event.currentTarget.id,
         },
         refetchQueries: [
           {
@@ -47,7 +51,5 @@ export default function BoardCommentList() {
       console.log(error);
     }
   };
-  return <BoardCommentListUI
-    onClickDelete={onClickDelete}
-    data={data} />;
+  return <BoardCommentListUI onClickDelete={onClickDelete} data={data} />;
 }

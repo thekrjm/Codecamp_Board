@@ -1,23 +1,23 @@
-import { ChangeEvent, MouseEvent } from "react"
+import { ChangeEvent, MouseEvent } from "react";
 
 export interface IBoardWriteProps {
-    isEdit: boolean
-    data?: any
+  isEdit: boolean;
+  data?: any;
 }
 
-export interface IMyvariables {
-    number: number
-    writer?: string
-    title?: string
-    contents?: string
+export interface IMyVariables {
+  number: number;
+  writer?: string;
+  title?: string;
+  contents?: string;
 }
 
 export interface IBoardWriteUI {
-    onClickUpdate: (event: MouseEvent<HTMLButtonElement>) => void
-    onClickSubmit: (event: MouseEvent<HTMLButtonElement>) => void
-    onChangeWriter: (event: ChangeEvent<HTMLInputElement>) => void
-    onChangeTitle: (event: ChangeEvent<HTMLInputElement>) => void
-    onChangeContents: (event: ChangeEvent<HTMLInputElement>) => void
-    isEdit: boolean
-    data?: any
+  onClickUpdate: (event: MouseEvent<HTMLButtonElement>) => void;
+  onClickSubmit: (event: MouseEvent<HTMLButtonElement>) => void;
+  onChangeWriter: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeTitle: (event: ChangeEvent<HTMLInputElement>) => void;
+  onChangeContents: (event: ChangeEvent<HTMLInputElement>) => void;
+  isEdit: boolean;
+  data?: any;
 }
