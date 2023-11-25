@@ -13,7 +13,7 @@ export default function BoardListUI(props: IBoardListUIProps) {
         <S.ColumnHeaderBasic>날짜</S.ColumnHeaderBasic>
       </S.Row>
       {props.data?.fetchBoards.map((el) => (
-        <S.Row >
+        <S.Row key={el._id} >
           <S.ColumnBasic>
             {String(el._id.slice(-4).toUpperCase())}
           </S.ColumnBasic>

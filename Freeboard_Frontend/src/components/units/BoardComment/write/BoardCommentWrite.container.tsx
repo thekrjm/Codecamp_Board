@@ -36,9 +36,9 @@ export default function BoardCommentWrite() {
     await createBoardComment({
       variables: {
         createBoardCommentInput: {
-          writer: writer,
-          password: password,
-          contents: contents,
+          writer,
+          password,
+          contents,
           rating: 0,
         },
         boardId: router.query.boardId,

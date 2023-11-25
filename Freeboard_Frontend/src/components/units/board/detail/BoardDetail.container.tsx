@@ -6,6 +6,9 @@ import { IQuery, IQueryFetchBoardArgs } from "../../../../commons/types/generate
 
 export default function BoardDetail() {
   const router = useRouter()
+  if (router.query.boardId !== "string") {
+    return <></>
+  }
   const { data } = useQuery<Pick<IQuery, "fetchBoard">, IQueryFetchBoardArgs>(FETCH_BOARD, {
     variables: { boardId: router.query.boardId },
   });
