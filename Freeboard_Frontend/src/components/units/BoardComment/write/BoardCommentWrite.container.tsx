@@ -4,7 +4,10 @@ import { useMutation } from "@apollo/client";
 import { CREATE_BOARD_COMMENT } from "./BoardCommentWrite.queries";
 import { useRouter } from "next/router";
 import { FETCH_BOARD_COMMENTS } from "../list/BoardCommentList.queries";
-import { IMutation, IMutationCreateBoardCommentArgs } from "../../../../commons/types/generated/types";
+import {
+  IMutation,
+  IMutationCreateBoardCommentArgs,
+} from "../../../../commons/types/generated/types";
 
 export default function BoardCommentWrite() {
   const router = useRouter();
@@ -12,8 +15,11 @@ export default function BoardCommentWrite() {
   const [writer, setWriter] = useState("");
   const [password, setPassword] = useState("");
   const [contents, setContents] = useState("");
-
-  const [createBoardComment] = useMutation<Pick<IMutation, "createBoardComment">, IMutationCreateBoardCommentArgs>(CREATE_BOARD_COMMENT);
+  const [star, setStar] = useState(0);
+  const [createBoardComment] = useMutation<
+    Pick<IMutation, "createBoardComment">,
+    IMutationCreateBoardCommentArgs
+  >(CREATE_BOARD_COMMENT);
 
   const onChangeWriter = (event: ChangeEvent<HTMLInputElement>) => {
     setWriter(event.target.value);
@@ -30,7 +36,7 @@ export default function BoardCommentWrite() {
   const onClickSubmit = async () => {
     if (typeof router.query.boardId !== "string") {
       alert("올바르지 않은 게시글 아이디입니다.");
-      router.push("/")
+      router.push("/");
       return;
     }
     await createBoardComment({
@@ -39,7 +45,7 @@ export default function BoardCommentWrite() {
           writer,
           password,
           contents,
-          rating: 0,
+          rating: star,
         },
         boardId: router.query.boardId,
       },
@@ -50,6 +56,10 @@ export default function BoardCommentWrite() {
         },
       ],
     });
+    setContents("");
+    setPassword("");
+    setWriter("");
+    setStar(0);
   };
   return (
     <BoardCommentWriteUI
@@ -58,6 +68,10 @@ export default function BoardCommentWrite() {
       onChangeContents={onChangeContents}
       onClickSubmit={onClickSubmit}
       contents={contents}
+      writer={writer}
+      password={password}
+      star={star}
+      setStar={setStar}
     />
   );
 }

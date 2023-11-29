@@ -9,6 +9,7 @@ import {
   IMutationCreateBoardArgs,
   IMutationUpdateBoardArgs,
 } from "../../../../commons/types/generated/types";
+import { Address } from "react-daum-postcode";
 
 export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
   const router = useRouter();
@@ -98,7 +99,7 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
       setIsActive(false);
     }
   };
-  const onChangeAddressComplete = (data: any) => {
+  const onChangeAddressComplete = (data: Address) => {
     setZipcode(data.zonecode);
     setAddress(data.address);
     setIsOpen(false);
@@ -108,7 +109,7 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
     setIsOpen(true);
   };
 
-  const onClickSubmit = async () => {
+  const onClickSubmit = async (): Promise<void> => {
     if (!writer) {
       setWriterError("작성자를 입력해주세요.");
     }
@@ -139,7 +140,6 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
             },
           },
         });
-        console.log(result.data?.createBoard._id);
         router.push(`/boards/${result.data?.createBoard._id}`);
       } catch (error) {
         if (error instanceof Error) {
@@ -151,7 +151,6 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
 
   const onClickUpdate = async () => {
     //writer는 백엔드에서 수정 못하게 설정되어있으므로 readonly, disabled를 사용해서 비활성화 시켜야함
-
     if (
       !title &&
       !contents &&
@@ -180,7 +179,7 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
       if (addressDetail)
         updateBoardInputValue.boardAddress.addressDetail = addressDetail;
     }
-    if (router.query.boardId !== "string") return;
+    if (typeof router.query.boardId !== "string") return;
     try {
       const result = await updateBoard({
         variables: {

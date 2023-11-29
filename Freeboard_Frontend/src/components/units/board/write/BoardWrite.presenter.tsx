@@ -1,7 +1,6 @@
 import { useState } from "react";
 import * as S from "./BoardWrite.styles";
 import { IBoardWriteUIProps } from "./BoardWrite.types";
-import { Address } from "react-daum-postcode";
 
 export default function BoardWriteUI(props: IBoardWriteUIProps) {
   const [isModalOpen, setIsModalOpen] = useState(props.isOpen);
@@ -15,23 +14,13 @@ export default function BoardWriteUI(props: IBoardWriteUIProps) {
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen((prev) => !prev);
   };
-
   return (
     <>
       {isModalOpen && (
-        <S.AddressModal
-          open={isModalOpen}
-          onCancel={handleCancel}
-          onOk={handleOk}
-        >
-          <S.AddressSearchInput
-            onComplete={(data: Address) => {
-              props.onChangeAddressComplete(data);
-              handleCancel();
-            }}
-          />
+        <S.AddressModal open={true} onOk={handleOk} onCancel={handleCancel}>
+          <S.AddressSearchInput onComplete={props.onChangeAddressComplete} />
         </S.AddressModal>
       )}
       <S.Wrapper>
@@ -85,7 +74,7 @@ export default function BoardWriteUI(props: IBoardWriteUIProps) {
               readOnly
               value={
                 props.zipcode ||
-                props.data?.fetshboard?.boardAddress?.zipcode ||
+                props.data?.fetchBoard?.boardAddress?.zipcode ||
                 ""
               }
             />
@@ -95,20 +84,24 @@ export default function BoardWriteUI(props: IBoardWriteUIProps) {
             readOnly
             value={
               props.address ||
-              props.data?.fetchBoard.boardAddress?.address ||
+              props.data?.fetchBoard?.boardAddress?.address ||
               ""
             }
           />
           <S.Address
             onChange={props.onChangeAddressDetail}
             defaultValue={
-              props.data?.fetchBoard.boardAddress?.addressDetail || ""
+              props.data?.fetchBoard?.boardAddress?.addressDetail || ""
             }
           />
         </S.InputWrapper>
         <S.InputWrapper>
           <S.Label>유튜브</S.Label>
-          <S.Youtube placeholder="링크를 복사해주세요." />
+          <S.Youtube
+            placeholder="링크를 복사해주세요."
+            onChange={props.onChangeYoutubeUrl}
+            defaultValue={props.data?.fetchBoard.youtubeUrl || ""}
+          />
         </S.InputWrapper>
         <S.ImageWrapper>
           <S.Label>사진첨부</S.Label>

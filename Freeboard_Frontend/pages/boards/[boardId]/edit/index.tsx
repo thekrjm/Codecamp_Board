@@ -12,13 +12,19 @@ export const FETCH_BOARD = gql`
       writer
       title
       contents
+      youtubeUrl
+      boardAddress {
+        zipcode
+        address
+        addressDetail
+      }
     }
   }
 `;
 
 export default function BoardsEditPage() {
   const router = useRouter();
-  if (router.query.boardId !== "string") {
+  if (typeof router.query.boardId !== "string") {
     return <></>;
   }
   const { data } = useQuery<Pick<IQuery, "fetchBoard">, IQueryFetchBoardArgs>(

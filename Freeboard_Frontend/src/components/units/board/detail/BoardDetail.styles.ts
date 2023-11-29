@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import ReactPlayer from "react-player";
 
 export const Wrapper = styled.div`
   width: 1200px;
@@ -80,4 +81,10 @@ export const Button = styled.button`
     background-color: gold;
     border-color: white;
   }
+`;
+
+export const Youtube = styled(ReactPlayer)`
+  margin: auto;
+  width: 486px;
+  height: 240px;
 `;

@@ -5,7 +5,7 @@ import {
   DELETE_BOARD_COMMENT,
   FETCH_BOARD_COMMENTS,
 } from "./BoardCommentList.queries";
-import { MouseEvent } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 import {
   IMutation,
   IMutationDeleteBoardCommentArgs,
@@ -15,11 +15,17 @@ import {
 
 export default function BoardCommentList() {
   const router = useRouter();
+
+  const [myPassword, setMyPassword] = useState("");
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
+  const [myBoardCommentId, setMyBoardCommentId] = useState("");
+
   if (typeof router.query.boardId !== "string") {
     alert("올바르지 않은 게시글 아이디입니다.");
     void router.push("/");
     return <></>;
   }
+
   const [deleteBoardComment] = useMutation<
     Pick<IMutation, "deleteBoardComment">,
     IMutationDeleteBoardCommentArgs
@@ -32,13 +38,12 @@ export default function BoardCommentList() {
     variables: { boardId: router.query.boardId },
   });
 
-  const onClickDelete = async (event: MouseEvent<HTMLImageElement>) => {
-    const myPassword = prompt("비밀번호를 입력하세요.");
+  const onClickDelete = async (event: MouseEvent<HTMLElement>) => {
     try {
       await deleteBoardComment({
         variables: {
           password: myPassword,
-          boardCommentId: event.currentTarget.id,
+          boardCommentId: myBoardCommentId,
         },
         refetchQueries: [
           {
@@ -47,9 +52,29 @@ export default function BoardCommentList() {
           },
         ],
       });
+      setIsOpenDeleteModal(false);
     } catch (error) {
       console.log(error);
     }
   };
-  return <BoardCommentListUI onClickDelete={onClickDelete} data={data} />;
+
+  const onChangeDeletePassword = (event: ChangeEvent<HTMLInputElement>) => {
+    setMyPassword(event.target.value);
+  };
+
+  const onClickOpenDeleteModal = (event: MouseEvent<HTMLImageElement>) => {
+    if (!(event.target instanceof HTMLElement)) return;
+    setMyBoardCommentId(event.currentTarget.id);
+    setIsOpenDeleteModal(true);
+  };
+
+  return (
+    <BoardCommentListUI
+      onClickDelete={onClickDelete}
+      data={data}
+      onChangeDeletePassword={onChangeDeletePassword}
+      onClickOpenDeleteModal={onClickOpenDeleteModal}
+      isOpenDeleteModal={isOpenDeleteModal}
+    />
+  );
 }
