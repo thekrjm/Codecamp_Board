@@ -25,8 +25,10 @@ export default function Layout(props: ILayoutProps): JSX.Element {
     <>
       {!isHiddenHeader && <LayoutHeader />}
       <LayoutBanner />
-      <LayoutNavigation />
-      <div>{props.children}</div>
+      <div style={{ display: "flex" }}>
+        <LayoutNavigation />
+        <div>{props.children}</div>
+      </div>
       <LayoutFooter />
     </>
   );

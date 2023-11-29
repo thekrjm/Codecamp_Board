@@ -6,5 +6,5 @@ const Wrapper = styled.div`
 `;
 
 export default function LayoutNavigation() {
-  return <Wrapper>네비</Wrapper>;
+  return <Wrapper>navigation</Wrapper>;
 }
