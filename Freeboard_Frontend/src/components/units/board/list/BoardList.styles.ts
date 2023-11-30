@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
+  height: 630px;
   width: 1200px;
   margin: 100px;
 `;
@@ -20,7 +21,7 @@ export const Row = styled.div`
   height: 52px;
   line-height: 52px;
   border-bottom: 1px solid gray;
-/* 
+  /* 
   :hover {
     color: blue;
   } */
