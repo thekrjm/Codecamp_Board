@@ -9,7 +9,6 @@ import {
 
 export default function BoardDetail() {
   const router = useRouter();
-  console.log(router);
 
   if (typeof router.query.boardId !== "string") {
     return <></>;
@@ -29,8 +28,6 @@ export default function BoardDetail() {
   const onClickMoveToBoardEdit = () => {
     router.push(`/boards/${router.query.boardId}/edit`);
   };
-
-  console.log("확인");
 
   return (
     <BoardDetailUI

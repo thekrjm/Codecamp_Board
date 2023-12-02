@@ -31,7 +31,7 @@ export default function BoardCommentList() {
     IMutationDeleteBoardCommentArgs
   >(DELETE_BOARD_COMMENT);
 
-  const { data } = useQuery<
+  const { data, fetchMore } = useQuery<
     Pick<IQuery, "fetchBoardComments">,
     IQueryFetchBoardCommentsArgs
   >(FETCH_BOARD_COMMENTS, {
@@ -68,8 +68,36 @@ export default function BoardCommentList() {
     setIsOpenDeleteModal(true);
   };
 
+  const onLoadMore = (): void => {
+    if (data === undefined) return;
+    const commentsLength = data?.fetchBoardComments.length;
+    const page = Math.ceil(commentsLength / 10 + 1);
+    void fetchMore({
+      variables: {
+        page,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (fetchMoreResult.fetchBoardComments === undefined) {
+          return {
+            fetchBoardComments: [...prev.fetchBoardComments],
+          };
+        }
+
+        console.log("fetch~!~");
+
+        return {
+          fetchBoardComments: [
+            ...prev.fetchBoardComments,
+            ...fetchMoreResult.fetchBoardComments,
+          ],
+        };
+      },
+    });
+  };
+
   return (
     <BoardCommentListUI
+      onLoadMore={onLoadMore}
       onClickDelete={onClickDelete}
       data={data}
       onChangeDeletePassword={onChangeDeletePassword}
