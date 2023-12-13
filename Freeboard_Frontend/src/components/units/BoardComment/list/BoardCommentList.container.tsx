@@ -1,24 +1,14 @@
 import { useRouter } from "next/router";
 import BoardCommentListUI from "./BoardCommentList.presenter";
-import { useMutation, useQuery } from "@apollo/client";
+import { FETCH_BOARD_COMMENTS } from "./BoardCommentList.queries";
 import {
-  DELETE_BOARD_COMMENT,
-  FETCH_BOARD_COMMENTS,
-} from "./BoardCommentList.queries";
-import { ChangeEvent, MouseEvent, useState } from "react";
-import {
-  IMutation,
-  IMutationDeleteBoardCommentArgs,
   IQuery,
   IQueryFetchBoardCommentsArgs,
 } from "../../../../commons/types/generated/types";
+import { useQuery } from "@apollo/client";
 
 export default function BoardCommentList() {
   const router = useRouter();
-
-  const [myPassword, setMyPassword] = useState("");
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
-  const [myBoardCommentId, setMyBoardCommentId] = useState("");
 
   if (typeof router.query.boardId !== "string") {
     alert("올바르지 않은 게시글 아이디입니다.");
@@ -26,47 +16,12 @@ export default function BoardCommentList() {
     return <></>;
   }
 
-  const [deleteBoardComment] = useMutation<
-    Pick<IMutation, "deleteBoardComment">,
-    IMutationDeleteBoardCommentArgs
-  >(DELETE_BOARD_COMMENT);
-
   const { data, fetchMore } = useQuery<
     Pick<IQuery, "fetchBoardComments">,
     IQueryFetchBoardCommentsArgs
   >(FETCH_BOARD_COMMENTS, {
     variables: { boardId: router.query.boardId },
   });
-
-  const onClickDelete = async (event: MouseEvent<HTMLElement>) => {
-    try {
-      await deleteBoardComment({
-        variables: {
-          password: myPassword,
-          boardCommentId: myBoardCommentId,
-        },
-        refetchQueries: [
-          {
-            query: FETCH_BOARD_COMMENTS,
-            variables: { boardId: router.query.boardId },
-          },
-        ],
-      });
-      setIsOpenDeleteModal(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onChangeDeletePassword = (event: ChangeEvent<HTMLInputElement>) => {
-    setMyPassword(event.target.value);
-  };
-
-  const onClickOpenDeleteModal = (event: MouseEvent<HTMLImageElement>) => {
-    if (!(event.target instanceof HTMLElement)) return;
-    setMyBoardCommentId(event.currentTarget.id);
-    setIsOpenDeleteModal(true);
-  };
 
   const onLoadMore = (): void => {
     if (data === undefined) return;
@@ -95,14 +50,5 @@ export default function BoardCommentList() {
     });
   };
 
-  return (
-    <BoardCommentListUI
-      onLoadMore={onLoadMore}
-      onClickDelete={onClickDelete}
-      data={data}
-      onChangeDeletePassword={onChangeDeletePassword}
-      onClickOpenDeleteModal={onClickOpenDeleteModal}
-      isOpenDeleteModal={isOpenDeleteModal}
-    />
-  );
+  return <BoardCommentListUI onLoadMore={onLoadMore} data={data} />;
 }
