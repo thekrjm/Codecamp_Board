@@ -12,41 +12,47 @@ const CREATE_BOARD = gql`
   }
 `;
 
-export default function GraphqlMutationPage() {
-  const [inputs, setInputs] = useState({
-    writer: "",
-    title: "",
-    contents: "",
-  });
+export default function GraphqlMutationPage(): JSX.Element {
+  const [writer, setWriter] = useState("");
+  const [title, setTitle] = useState("");
+  const [contents, setContents] = useState("");
+
   const [createBoard] = useMutation(CREATE_BOARD);
 
-  const onClickSubmit = async (event: MouseEvent<HTMLButtonElement>) => {
+  const onClickSubmit = async (
+    event: MouseEvent<HTMLButtonElement>,
+  ): Promise<void> => {
     const result = await createBoard({
       variables: {
-        ...inputs,
+        writer,
+        title,
+        contents,
       },
     });
     console.log(result);
     alert(result.data.createBoard.message);
   };
 
-  const onChangeInputs = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputs((prev) => ({
-      ...prev,
-      [event.target.id]: event.target.value,
-    }));
+  const onChangeWriter = (event: ChangeEvent<HTMLInputElement>): void => {
+    setWriter(event.target.value);
+  };
+  const onChangeTitle = (event: ChangeEvent<HTMLInputElement>): void => {
+    setTitle(event.target.value);
+  };
+  const onChangeContents = (event: ChangeEvent<HTMLInputElement>): void => {
+    setContents(event.target.value);
   };
 
   return (
     <>
       작성자:
-      <input type="text" id="writer" onChange={onChangeInputs} />
+      <input type="text" onChange={onChangeWriter} />
       <br />
       제목:
-      <input type="text" id="title" onChange={onChangeInputs} />
+      <input type="text" onChange={onChangeTitle} />
       <br />
       내용:
-      <input type="text" id="contents" onChange={onChangeInputs} />
+      <input type="text" onChange={onChangeContents} />
       <br />
       <button onClick={onClickSubmit}>GRAPHQL-API(동기) 요청하기</button>
     </>

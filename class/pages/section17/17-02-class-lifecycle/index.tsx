@@ -11,7 +11,7 @@ export default class ClassCounterPage extends Component {
   }
 
   componentDidUpdate() {
-    console.log("변경되기 전에 실행");
+    console.log("변경되고 나서 실행");
   }
 
   componentDidWillUnMount() {

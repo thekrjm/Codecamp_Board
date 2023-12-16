@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <title>this의 이해</title>
+    <script>
+      class ClassCounterUp {
+        count = 10;
+
+        onClickCountUp = () => {
+          console.log("현재 카운트", this.count);
+          this.count + 1;
+        };
+
+        render() {
+          const button = document.createElement("button");
+          button.innerText = "카운트업";
+          button.addEventListener("click", this.onClickCountUp);
+          document.body.appendChild(button);
+
+          const countUp = document.createElement("div");
+          countUp.innerHTML = this.count;
+        }
+      }
+
+      window.onload = () => {
+        const counter = new ClassCounterUp();
+        counter.render();
+      };
+    </script>
+  </head>
+  <body></body>
+</html>
