@@ -25,7 +25,7 @@ export default function OpenapiList(): JSX.Element {
 
   useEffect(() => {
     const getImg = async () => {
-      new Array(9).fill(1).forEach(async (_) => {
+      new Array(12).fill(1).forEach(async (_) => {
         const result = await axios("https://dog.ceo/api/breeds/image/random");
         setImgItam((prev) => [...prev, result.data.message]);
       });

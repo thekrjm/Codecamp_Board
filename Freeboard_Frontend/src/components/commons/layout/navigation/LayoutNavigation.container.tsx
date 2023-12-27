@@ -27,6 +27,7 @@ const MenuItem = styled.div`
 `;
 
 const NAVIGATION_MENU = [
+  { name: "firebase게시판", page: "/firebase" },
   { name: "외부사진", page: "/openapi" },
   { name: "나눔합니다", page: "/share" },
   { name: "중고마켓", page: "/boards" },

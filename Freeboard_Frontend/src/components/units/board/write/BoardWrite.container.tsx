@@ -31,6 +31,8 @@ export default function BoardWrite(props: IBoardWriteProps): JSX.Element {
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
 
+  const [imageUrl, setImageUrl] = useState(["", "", ""]);
+
   const [createBoard] = useMutation<
     Pick<IMutation, "createBoard">,
     IMutationCreateBoardArgs
